@@ -18,12 +18,12 @@ namespace APICatalog.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Category>> Get()
+        public async Task<ActionResult<IEnumerable<Category>>> Get()
         {
             try
             {
                 //A utilização do AsNoTracking, se faz presente para melhorar o desempenho da sua API, pois evita o rastreamento desnecessário de uma Entidade, evitando a sobrecarga de dados na sua aplicação
-                var categories = _context.Categories.AsNoTracking().ToList();
+                var categories = await _context.Categories.AsNoTracking().ToListAsync();
                 //A utilização do TAKE serve para limitar a quantidade de dados que vão ser mostradas, visando melhorar o desenpenho.
                 //var categories = _context.Categories.Take(2).AsNoTracking().ToList();
 
@@ -42,9 +42,9 @@ namespace APICatalog.Controllers
         }
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
-        public ActionResult<Category> Get(int id)
+        public async Task<ActionResult<Category>> Get(int id)
         {
-            var category = _context.Categories.AsNoTracking().FirstOrDefault(c => c.CategoryId == id);
+            var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(c => c.CategoryId == id);
 
             if (category is null)
             {
@@ -55,9 +55,9 @@ namespace APICatalog.Controllers
         }
 
         [HttpGet("produtos")]
-        public ActionResult<IEnumerable<Category>> GetProductsCategory()
+        public async Task<ActionResult<IEnumerable<Category>>> GetProductsCategory()
         {
-            var productsCategory = _context.Categories.Include(p => p.Products).AsNoTracking().ToList();
+            var productsCategory = await _context.Categories.Include(p => p.Products).AsNoTracking().ToListAsync();
             //Abaixo está sendo criado um filtro para, fazer a filtragem dos dados relacionais a categoria visando também a otimização
             //var productsCategory = _context.Categories.Include(p => p.Products).Where(c => c.CategoryId <= 5).AsNoTracking().ToList();
             if (productsCategory is null)

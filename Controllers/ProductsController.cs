@@ -17,9 +17,9 @@ namespace APICatalog.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Product>> Get()
+        public async Task<ActionResult<IEnumerable<Product>>> Get()
         {
-            var products = _context.Products.AsNoTracking().ToList();
+            var products = await _context.Products.AsNoTracking().ToListAsync();
             if (products is null)
             {
                 return NotFound("Não existe nenhum produto cadastrado!!!");
@@ -29,9 +29,9 @@ namespace APICatalog.Controllers
 
         //Uma rota nomeada
         [HttpGet("{id:int}", Name = "ObterProduto")]
-        public ActionResult<Product> Get(int id)
+        public async Task<ActionResult<Product>> Get(int id)
         {
-            var product = _context.Products.AsNoTracking().FirstOrDefault(product => product.ProductId == id);
+            var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(product => product.ProductId == id);
             if (product == null)
             {
                 return NotFound("O produto informado não existe em nosso catalogo!!!");
