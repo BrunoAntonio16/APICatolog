@@ -1,4 +1,5 @@
 using APICatalog.Context;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -17,6 +18,11 @@ builder.Services.AddSwaggerGen();
 var MySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(MySqlConnection, ServerVersion.AutoDetect(MySqlConnection)));
+
+//builder.Services.Configure<ApiBehaviorOptions>(options =>
+//{
+//    options.DisableImplicitFromServicesParameters = true;
+//});
 
 var app = builder.Build();
 
