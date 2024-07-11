@@ -14,29 +14,37 @@ public class Product : IValidatableObject
     //Porém ele também não seria necessário pois o EF Core entende que quando um atributo de uma classe contem o nome ID presente em sua string ele já vai ser uma chave primaria no banco.
     [Key]
     public int ProductId { get; set; }
+
     //O atributo Required define que o atributo Name vai ser do tipo NOT NULL no banco de dados, algo que não pode ser vazio.
     //O atributo StringLength vai definir o tamanho da String/Texto que a coluna Name no banco dados vai receber de valor.
-    [Required]
-    [StringLength(80)]
+    [Required(ErrorMessage = "O nome do produto é obrigatorio!!!")]
+    [StringLength(80, MinimumLength = 20, ErrorMessage = "O nome do produto só consegue armazenar textos que tenham entre 80 e 20 caracteres")]
     [FirstLetterCapitalized]
     public string? Name { get; set; }
+
     //O atributo Required define que o atributo Description vai ser do tipo NOT NULL no banco de dados, algo que não pode ser vazio.
     //O atributo StringLength vai definir o tamanho da String/Texto que a coluna Description no banco dados vai receber de valor.
-    [Required]
-    [StringLength(300)]
+    [Required(ErrorMessage = "A descrição do produto é obrigatorio!!!")]
+    [StringLength(300, MinimumLength = 100, ErrorMessage = "A descrição do produto só consegue armazenar textos que tenham entre 300 e 100 caracteres")]
     public string? Description { get; set; }
+
     //O atributo Required define que o atributo Price vai ser do tipo NOT NULL no banco de dados, algo que não pode ser vazio.
     //O atributo Column define que esse atributo da classe vai ser uma coluna contendo as informações passadas via parametro do Column
-    [Required]
+    [Required(ErrorMessage = "O preço do produto é obrigatorio!!!")]
     [Column(TypeName ="decimal(10,2)")]
     public decimal Price { get; set; }
+
     //O atributo Required define que o atributo UrlImage vai ser do tipo NOT NULL no banco de dados, algo que não pode ser vazio.
     //O atributo StringLength vai definir o tamanho da String/Texto que a coluna Description no banco dados vai receber de valor.
-    [Required]
+    [Required(ErrorMessage = "A url da imagem do produto é obrigatorio!!!")]
     [StringLength(300)]
+    [Url(ErrorMessage = "A url informada não está dentro dos padrões estabelecidos")]
     public string? UrlImage { get; set; }
+
     public float Stock { get; set; }
+
     public DateTime DataRegister { get; set; }
+
     public int CategoryId { get; set; }
 
     [JsonIgnore]

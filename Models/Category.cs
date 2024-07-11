@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using APICatalog.Validations;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,13 +20,15 @@ public class Category
     public int CategoryId { get; set; }
     //O atributo Required define que o atributo Name vai ser do tipo NOT NULL no banco de dados, algo que não pode ser vazio.
     //O atributo StringLength vai definir o tamanho da String/Texto que a coluna Name no banco dados vai receber de valor.
-    [Required]
-    [StringLength(80)]
+    [Required(ErrorMessage = "O nome da categoria é obrigatorio!!!")]
+    [StringLength(12, MinimumLength = 5, ErrorMessage = "O nome da categoria só consegue armazenar textos que tenham entre 5 e 12 caracteres")]
+    [FirstLetterCapitalized]
     public string? Name { get; set; }
     //O atributo Required define que o atributo UrlImage vai ser do tipo NOT NULL no banco de dados, algo que não pode ser vazio.
     //O atributo StringLength vai definir o tamanho da String/Texto que a coluna UrlImage no banco dados vai receber de valor.
     [Required]
     [StringLength(300)]
+    [Url(ErrorMessage = "A url informada não está dentro dos padrões estabelecidos")]
     public string? UrlImage { get; set; }
 
     public ICollection<Product>? Products { get; set; }
