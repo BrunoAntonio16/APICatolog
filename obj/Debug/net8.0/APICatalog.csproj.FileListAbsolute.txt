@@ -102,3 +102,4 @@ C:\Users\Bruno\Documents\dev\C#\C#\Macarotti\APICatalog\APICatalog\obj\Debug\net
 C:\Users\Bruno\Documents\dev\C#\C#\Macarotti\APICatalog\APICatalog\obj\Debug\net8.0\APICatalog.pdb
 C:\Users\Bruno\Documents\dev\C#\C#\Macarotti\APICatalog\APICatalog\obj\Debug\net8.0\APICatalog.genruntimeconfig.cache
 C:\Users\Bruno\Documents\dev\C#\C#\Macarotti\APICatalog\APICatalog\obj\Debug\net8.0\ref\APICatalog.dll
+C:\Users\Bruno\Documents\dev\C#\C#\Macarotti\APICatalog\APICatalog\obj\Debug\net8.0\APICatalog.sourcelink.json
