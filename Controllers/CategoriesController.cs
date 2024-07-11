@@ -70,10 +70,10 @@ namespace APICatalog.Controllers
         [HttpPost]
         public IActionResult Post(Category category)
         {
-            if (category is null)
-            {
-                return BadRequest();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest();
+            //}
 
             _context.Categories.Add(category);
             _context.SaveChanges();
