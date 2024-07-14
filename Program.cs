@@ -1,4 +1,5 @@
 using APICatalog.Context;
+using APICatalog.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -31,12 +32,26 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ConfigureExceptionHandler();
 }
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
+
+//app.Use(async (context, next) =>
+//{
+//    await next();
+//});
 
 app.MapControllers();
 
+//app.Run(async (context) =>
+//{
+//    await context.Response.WriteAsync("Middleware final...");
+//});
+
 app.Run();
+
