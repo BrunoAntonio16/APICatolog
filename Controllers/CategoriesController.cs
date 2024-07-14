@@ -38,7 +38,6 @@ namespace APICatalog.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro no servidor ao tentar retornar os dados da pesquisa...\nPor gentileza entre em contato com o nosso suporte!!!");
             }
-            
         }
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
