@@ -1,5 +1,6 @@
 using APICatalog.Context;
 using APICatalog.Extensions;
+using APICatalog.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -24,6 +25,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 //{
 //    options.DisableImplicitFromServicesParameters = true;
 //});
+
+builder.Services.AddScoped<ApiLoggingFilter>();
 
 var app = builder.Build();
 
