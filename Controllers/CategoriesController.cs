@@ -4,6 +4,7 @@ using APICatalog.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using APICatolog.Repositories;
 
 namespace APICatalog.Controllers
 {
@@ -11,21 +12,21 @@ namespace APICatalog.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly ICategoryRepository _repository;
 
-        public CategoriesController(AppDbContext context)
+        public CategoriesController(ICategoryRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet]
         [ServiceFilter(typeof(ApiLoggingFilter))]
-        public async Task<ActionResult<IEnumerable<Category>>> Get()
+        public ActionResult<IEnumerable<Category>> Get()
         {
             try
             {
                 //A utilização do AsNoTracking, se faz presente para melhorar o desempenho da sua API, pois evita o rastreamento desnecessário de uma Entidade, evitando a sobrecarga de dados na sua aplicação
-                var categories = await _context.Categories.AsNoTracking().ToListAsync();
+                var categories = _repository.GetCategories(); 
                 //A utilização do TAKE serve para limitar a quantidade de dados que vão ser mostradas, visando melhorar o desenpenho.
                 //var categories = _context.Categories.Take(2).AsNoTracking().ToList();
 
@@ -34,7 +35,7 @@ namespace APICatalog.Controllers
                     return NotFound("Não existe nenhuma categoria cadastrada no momento...");
                 }
 
-                return categories;
+                return Ok(categories);
             }
             catch (Exception)
             {
@@ -43,29 +44,30 @@ namespace APICatalog.Controllers
         }
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
-        public async Task<ActionResult<Category>> Get(int id)
+        public ActionResult<Category> Get(int id)
         {
-            var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(c => c.CategoryId == id);
+            var category = _repository.GetCategory(id);
 
             if (category is null)
             {
                 return NotFound("A categoria informada não existe em nosso sistema...");
             }
 
-            return category;
+            return Ok(category);
         }
 
         [HttpGet("produtos")]
-        public async Task<ActionResult<IEnumerable<Category>>> GetProductsCategory()
+        public ActionResult<IEnumerable<Category>> GetProductsCategory()
         {
-            var productsCategory = await _context.Categories.Include(p => p.Products).AsNoTracking().ToListAsync();
+            var productsCategory = _repository.GetProductsCategory();
             //Abaixo está sendo criado um filtro para, fazer a filtragem dos dados relacionais a categoria visando também a otimização
             //var productsCategory = _context.Categories.Include(p => p.Products).Where(c => c.CategoryId <= 5).AsNoTracking().ToList();
             if (productsCategory is null)
             {
                 return NotFound();
             }
-            return productsCategory;
+            // await _context.Categories.Include(p => p.Products).AsNoTracking().ToListAsync();
+            return Ok(productsCategory);
         }
 
         [HttpPost]
@@ -76,10 +78,9 @@ namespace APICatalog.Controllers
             //    return BadRequest();
             //}
 
-            _context.Categories.Add(category);
-            _context.SaveChanges();
+            var categoryCreated = _repository.Create(category);
 
-            return new CreatedAtRouteResult("ObterCategoria", new { id = category.CategoryId }, category);
+            return new CreatedAtRouteResult("ObterCategoria", new { id = categoryCreated.CategoryId }, categoryCreated);
         }
 
         [HttpPut("{id:int}")]
@@ -90,26 +91,24 @@ namespace APICatalog.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(category).State = EntityState.Modified;
-            _context.SaveChanges();
+            _repository.Update(category);
 
             return Ok(category);
         }
 
         [HttpDelete]
-        public IActionResult Delete(int id)
+        public ActionResult<Category> Delete(int id)
         {
-            var category = _context.Categories.FirstOrDefault(c => c.CategoryId == id);
+            var category = _repository.GetCategory(id);
 
-            if(category is null)
+             if(category is null)
             {
                 return NotFound("A categoria informada não existe em nosso sistema...");
             }
 
-            _context.Categories.Remove(category);
-            _context.SaveChanges();
+            var categoryExclude = _repository.Delete(id);
 
-            return Ok(category);
+            return Ok(categoryExclude);
         }
     }
 }
